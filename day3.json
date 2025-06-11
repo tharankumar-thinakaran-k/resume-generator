@@ -1,0 +1,575 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {
+          "q": "email"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -4580,
+        -260
+      ],
+      "id": "30d992b2-ddb9-48ee-b4e7-7a4f95d79fc1",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "60Tr38GeJ3brez70",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an intelligent assistant that extracts structured information from email text.\ninput:{{ $json.snippet }}\nhere is mail id\n{{ $json.To }}\n\nGiven an email body, extract the following details:\n\n1. **Name** of the employee requesting leave\n2. **Email address** of the employee \n3. **Number of leave days requested**\nRespond in JSON format:\n{\n  \"name\": \"\",\n  \"email\": \"\",\n  \"days_requested\": \"\"\n} ",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -4360,
+        -260
+      ],
+      "id": "3d57c31e-6426-4060-afbe-bd13a2fe7fb8",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -4320,
+        -40
+      ],
+      "id": "58517b47-368e-469b-a955-38c9b0a65cf7",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "TVjv6jnvfVOtRCVq",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "=Extract the following fields from the email content:  {{ $json.output }}\nName of the employee\nEmail Adress of the employee\nNumber of leave days requested\nReturn the extracted information strictly in the following JSON format:",
+        "schemaType": "fromJson",
+        "jsonSchemaExample": "{\n\t\"name\":\"Employee Name\",\n\"email\":\"gdcgcf134@gmail.com\", \n\"daysrequested\": 2\n}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.1,
+      "position": [
+        -4040,
+        -260
+      ],
+      "id": "5f620caf-60c1-4d37-b407-8a8dc3648e0e",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -4120,
+        -40
+      ],
+      "id": "9aaec9fe-1f3a-4e9f-b4ce-e710e9a74f3c",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "TVjv6jnvfVOtRCVq",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1p8mpKBmqtXoRyBVFdCckmH26l2k2YeW8D94wBePvbXQ",
+          "mode": "list",
+          "cachedResultName": "Leave Balance",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1p8mpKBmqtXoRyBVFdCckmH26l2k2YeW8D94wBePvbXQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1p8mpKBmqtXoRyBVFdCckmH26l2k2YeW8D94wBePvbXQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.output.name }}",
+            "email": "={{ $json.output.email }}",
+            "days requested": "={{ $json.output.daysrequested }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "days requested",
+              "displayName": "days requested",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -3500,
+        -260
+      ],
+      "id": "4c15303c-c361-47de-a80a-6aad781d81be",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "mCZXsYOqISMV0zm1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI HR Assistant.\nYour job is to approve or mark an employee's leave as Loss of Pay based on their available leave balance.\nIf the leave balance is greater than or equal to the number of days requested, approve the leave.\nOtherwise, approve it as Loss of Pay.\nGive the output as only Approved or Not Approved.\nInput:\nleave requested:{{ $json['days requested'] }}\n\nLeave Balance: analyze the google sheets i given as tools\nAvoid unnecessary input\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -3280,
+        -260
+      ],
+      "id": "811383e2-16ce-44c3-89a4-6eaf74144457",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -3260,
+        -40
+      ],
+      "id": "92a0c65f-c2ba-4fb6-9b04-35b13d3e6944",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "TVjv6jnvfVOtRCVq",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1p8mpKBmqtXoRyBVFdCckmH26l2k2YeW8D94wBePvbXQ",
+          "mode": "list",
+          "cachedResultName": "Leave Balance",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1p8mpKBmqtXoRyBVFdCckmH26l2k2YeW8D94wBePvbXQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1187041045,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1p8mpKBmqtXoRyBVFdCckmH26l2k2YeW8D94wBePvbXQ/edit#gid=1187041045"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        -3120,
+        -40
+      ],
+      "id": "d6992453-60a0-41bf-9a1a-e9e7eb61f246",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "mCZXsYOqISMV0zm1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7804b39f-142f-40bb-bc31-0f1aa347a51e",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "App",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2920,
+        -260
+      ],
+      "id": "9123caaa-bb34-45aa-9aaa-57695715cbc3",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=generate an email for approval of leave \nname:{{ $('Google Sheets').item.json.Name }}\ndays requested: {{ $('Google Sheets').item.json['days requested'] }}\nyour leave has approved",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -2700,
+        -360
+      ],
+      "id": "0b997832-ccd0-478a-a089-4204401182ea",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -2680,
+        -140
+      ],
+      "id": "3ba8f50a-753e-411d-a51d-6795e28cd890",
+      "name": "Google Gemini Chat Model3",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "TVjv6jnvfVOtRCVq",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Google Sheets').item.json.email }}",
+        "subject": "Leave status",
+        "emailType": "text",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -2340,
+        -360
+      ],
+      "id": "fab9a5d8-dafb-4384-a3fe-32e01bd822a6",
+      "name": "Gmail",
+      "webhookId": "aa5105b3-d521-48b1-bec2-c654334b3907",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "60Tr38GeJ3brez70",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=generate an email for disapproval of leave \nname:\ndays requested:{{ $('Google Sheets').item.json['Days Requested'] }} \nyour leave has disapproved",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -2500,
+        -160
+      ],
+      "id": "53be66e2-59c0-4459-8ea7-33027eb575d6",
+      "name": "AI Agent3"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -2480,
+        60
+      ],
+      "id": "56ea6b25-19a5-4914-8675-122fe3588a4a",
+      "name": "Google Gemini Chat Model4",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "TVjv6jnvfVOtRCVq",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Google Sheets').item.json.email }}",
+        "subject": "Leave Status",
+        "emailType": "text",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -2040,
+        -160
+      ],
+      "id": "2c60a1ec-7582-4731-b2bf-c8dae078f4fe",
+      "name": "Gmail1",
+      "webhookId": "d5fbfcf4-ee80-45c0-bda0-72c86a755593",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "60Tr38GeJ3brez70",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent3",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent3": {
+      "main": [
+        [
+          {
+            "node": "Gmail1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "be2b1884-18ad-4b24-9431-eb5028f85f2e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "30c5ef15de920c90262e3367d968e757bc7d3b0cda983915e7e934cac1dbc241"
+  },
+  "id": "g2wVRwIVb5MLRJ6e",
+  "tags": []
+}
