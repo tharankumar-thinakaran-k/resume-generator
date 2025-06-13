@@ -1,0 +1,5 @@
+pip install -U streamlit
+pip install -U langchain
+pip install -U langchain-google-genai
+pip install -U langchain-community
+pip install -U duckduckgo-search
