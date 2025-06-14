@@ -10,7 +10,7 @@ from langchain.schema.runnable import Runnable
 from langchain.schema.output_parser import StrOutputParser
 
 # === SET GEMINI API KEY HERE ===
-os.environ["GOOGLE_API_KEY"] = "AIzaSyAxc4Ikam5dHn8VYbktZ3MtS824N0F6Ebk"
+os.environ["GOOGLE_API_KEY"] = "api key"
 
 # === Streamlit UI Setup ===
 st.set_page_config(page_title="📘 Chat with PDF", layout="centered")
