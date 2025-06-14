@@ -5,7 +5,7 @@ import io
 import base64
 
 # Configure Gemini API
-genai.configure(api_key="AIzaSyA6xMnaLxir94mpBa9mVjAfdU0X579Uths")  # Replace with actual API key in quotes
+genai.configure(api_key="apikey")  # Replace with actual API key in quotes
 
 def generate_resume(text, format_style, tone):
     prompt = f"Generate a professional resume in {format_style} format with a {tone} tone. Input: {text}"
