@@ -6,7 +6,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.tools.ddg_search.tool import DuckDuckGoSearchRun
 
 # === HARDCODED GEMINI API KEY ===
-os.environ["GOOGLE_API_KEY"] = "AIzaSyA6xMnaLxir94mpBa9mVjAfdU0X579Uths"
+os.environ["GOOGLE_API_KEY"] = "apikey"
 
 # === SETUP GEMINI MODEL ===
 llm = ChatGoogleGenerativeAI(
