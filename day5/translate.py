@@ -5,7 +5,7 @@ from langchain.schema.runnable import Runnable
 import os
 
 # === Set your Gemini API key directly (Avoid .env for now) ===
-os.environ["GOOGLE_API_KEY"] = "AIzaSyAxc4Ikam5dHn8VYbktZ3MtS824N0F6Ebk"
+os.environ["GOOGLE_API_KEY"] = "apikey"
 
 # === Set up the Gemini LLM via LangChain ===
 try:
