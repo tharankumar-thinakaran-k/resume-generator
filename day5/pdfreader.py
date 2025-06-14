@@ -10,7 +10,7 @@ from langchain.chains import RetrievalQA
 
 
 # === API key for Gemini (set inline, not in .env) ===
-os.environ["GOOGLE_API_KEY"] = "AIzaSyAxc4Ikam5dHn8VYbktZ3MtS824N0F6Ebk"
+os.environ["GOOGLE_API_KEY"] = "apikey"
 
 # === Page settings ===
 st.set_page_config(page_title="📄 PDF Q&A with RAG", layout="centered")
