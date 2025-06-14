@@ -9,7 +9,7 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 
 # === Set Gemini API key directly ===
-os.environ["GOOGLE_API_KEY"] = "AIzaSyAxc4Ikam5dHn8VYbktZ3MtS824N0F6Ebk"
+os.environ["GOOGLE_API_KEY"] = "apikey"
 
 # === Streamlit UI Setup ===
 st.set_page_config(page_title="PDF Chat with Memory", layout="centered")
