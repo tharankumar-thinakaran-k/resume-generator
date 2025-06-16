@@ -80,7 +80,6 @@ def grievance_form():
         g_type = st.selectbox("Type", ["Academic", "Infrastructure", "Administration", "Others"])
         complaint = st.text_area("Complaint (detailed description)", height=200)
         submit = st.form_submit_button("Submit")
-
         if submit:
             grievance_id = generate_grievance_id()
             spoc_name = "Dr. A. Kumar"
@@ -109,7 +108,37 @@ def grievance_form():
             save_data(df)
 
             send_email(spoc_email, grievance_id, spoc_name, complaint)
+
+            # === Send Data to n8n Webhook ===
+            import requests
+            n8n_payload = {
+                "grievance_id": grievance_id,
+                "name": name,
+                "email": email,
+                "college": college,
+                "reg_no": reg_no,
+                "contact": contact,
+                "type": g_type,
+                "complaint": complaint,
+                "spoc_name": spoc_name,
+                "spoc_email": spoc_email,
+                "status": status,
+                "deadline": deadline
+            }
+
+            try:
+                response = requests.post(
+                    "https://tharan.app.n8n.cloud/webhook-test/0f6616ab-fad9-4ba5-a78d-733cefaf81c1",
+                    json=n8n_payload
+                )
+                if response.status_code == 200:
+                    st.info("Grievance also sent to tracking workflow (n8n).")
+                else:
+                    st.warning("Failed to notify n8n workflow.")
+            except Exception as e:
+                st.error(f"Webhook error: {e}")
             st.success(f"Grievance submitted successfully! Your Grievance ID is {grievance_id}")
+
 
 # === ADMIN PANEL ===
 def admin_panel():
